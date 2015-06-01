@@ -1,0 +1,4 @@
+Full source code is available from the following github repo
+github.com/asheshwor/quake
+
+Attribution
