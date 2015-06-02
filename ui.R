@@ -1,36 +1,42 @@
+#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#*          Nepal quake dashboard                                      *
+#*  2015-05-31                                                         *
+#*                                                                     *
+#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#*     Load packages
+#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 library(shinydashboard)
-# library(ShinyDash)
 library(leaflet)
 # library(shinythemes)
 
 header <- dashboardHeader(
   title = "Nepal quake"
-#   dropdownMenu(type="messages",
-#                messageItem(
-#                  from = "Data source",
-#                  message="Earthquake data downloaded from http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php"
-#                ))
 )
 # ntext <- eventReactive(input$goButton, {
 #   input$n
 # })
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Dashboard", tabName="dashboard"),
-    menuItem("Data",tabName="help"),
-    menuItem("Source code", tabName="source")
+    menuItem("Dashboard", tabName="dashboard", icon = icon("tachometer")),
+    menuItem("Data",tabName="help", icon = icon("table")),
+    menuItem("About", tabName="source", icon = icon("info"))
   )
 )
 body <- dashboardBody(
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+  ),
   tabItems(
     tabItem(tabName ="dashboard",
             # h2("Map"),
             fluidRow(
-              column(width = 12,
-                     box(width = NULL, solidHeader = TRUE,
-                         leafletOutput("quakemap", height = 400)
-                     )
-              ),
+#               column(width = 12,
+#                      box(width = NULL, solidHeader = TRUE,
+#                          leafletOutput("quakemap", height = 400)
+#                      )
+#               ),
               column(width=12,
                      box(title='Timeline', solidHeader=TRUE,
                          background = "light-blue",
@@ -44,18 +50,20 @@ body <- dashboardBody(
               ),
               column(width=3,
                      box(title="Select time window",
-                         background = "olive",
+                         background = "green",
                          solidHeader = TRUE,
                          width=NULL,
                          collapsible=TRUE,
-                         dateRangeInput("daterange", "Date range:",
-                                        start = "2015-04-30",
-                                        end   = "2015-05-29"),
-                         actionButton("updateButton", "Update daterange")
+                         dateRangeInput("daterange", "Select date range:",
+                                        start = "2015-04-12",
+                                        end   = "2015-06-02"),
+                         actionButton("updateButton", "Update daterange"),
+                         verbatimTextOutput("adf")
                          )),
               column(width=3,
                      box(title="Frequency table",
                          background = "black",
+                         status="success",
                          solidHeader = TRUE,
                          width=NULL,
                          collapsible=TRUE,
@@ -66,6 +74,7 @@ body <- dashboardBody(
                          background = "green",
                          solidHeader = TRUE,
                          width=NULL,
+                         status = "success",
                          collapsible=TRUE,
                          plotOutput("quakeHist", height = 200),
                          actionButton("histButton", "Draw histogram")
@@ -104,10 +113,11 @@ body <- dashboardBody(
   ),
   ## Source tab
   tabItem(tabName ="source",
-          h2("Source code"),
-          includeText("source.txt"),
-          br(),
-          p("github.com/asheshwor/quake")
+          h1("About"),
+          includeHTML("about.txt")
+          # includeText("about.txt"),
+#           br(),
+#           p("github.com/asheshwor/quake")
   )
 ))
 
