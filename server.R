@@ -37,10 +37,10 @@ quake$dateTime <- as.POSIXlt(sapply(quake$time, formatTime)) + 5.75*60*60
 quake.sub <- quake[ ,c(2:5, 16, 6:12, 14)]
 quake.sub$size <- cut(quake.sub$mag,
                       c(2, 3.9, 4.9, 5.9, 6.9, 7.9),
-                      labels=c("3.3 to 3.9", "3.9 to 4.9", "4.9 to 5.9", "5.9 to 6.9", "6.9 to 7.9"))
+                      labels=c("3.3 to 3.9", ">3.9 to 4.9", ">4.9 to 5.9", ">5.9 to 6.9", ">6.9 to 7.9"))
 # colour pallet
-pallet <- colorFactor(c("gray32", "dodgerblue4", "purple", "slateblue4", "firebrick1"),
-                   domain = c("3.3 to 3.9", "3.9 to 4.9", "4.9 to 5.9", "5.9 to 6.9", "6.9 to 7.9"))
+pallet <- colorFactor(c("gray32", "dodgerblue4",  "slateblue4", "purple", "firebrick1"),
+                   domain = c("3.3 to 3.9", ">3.9 to 4.9", ">4.9 to 5.9", ">5.9 to 6.9", ">6.9 to 7.9"))
 # create html for popup
 pu <- paste("<b>Mag:</b>", as.character(quake.sub$mag), "<br>",
             "<b>Depth:</b>", as.character(quake.sub$depth), "km<br>",
@@ -59,22 +59,27 @@ function(input, output, session) {
                              quake.sub$dateTime < endDate,]
     return(quake.sub)
   }
-  ## leaflet map
-#  qm <- leaflet(data=quake.sub) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
-#    setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
-#    addCircleMarkers(~longitude, ~latitude,
-#                     popup = pu,
-#                     radius = ~ifelse(mag < 3.9, 4, 5),
-#                     color = ~pallet(size),
-#                     stroke = FALSE, fillOpacity = 0.6)
+
   qm <- function() {
-    qm <- leaflet(data=getQuakes()) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
+    quakes.sub <- getQuakes()
+    tempmap <- leaflet(data=quakes.sub) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
       setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
       addCircleMarkers(~longitude, ~latitude,
                        popup = pu,
                        radius = ~ifelse(mag < 3.9, 4, 5),
                        color = ~pallet(size),
                        stroke = FALSE, fillOpacity = 0.6)
+    ## Add a legend once only
+    if (input$updateButton == 0) {
+      tempmap2 <- tempmap %>%
+        addLegend(
+          "bottomleft", pal = pallet,
+          values = sort(quakes.sub$size),
+          title = "Magnitude"
+          # labFormat = labelFormat()
+        )
+      return(tempmap2)
+    } else return(tempmap)
   }
  ## timeline
  drawHist <-    eventReactive(input$updateButton, {
@@ -85,7 +90,7 @@ function(input, output, session) {
      geom_point(size=3) +
      scale_colour_manual(name = "size",
                          values = c("gray32", "dodgerblue4",
-                                    "purple", "slateblue4",
+                                    "slateblue4", "purple",
                                     "firebrick1")) +
 #      geom_vline(xintercept = as.numeric(quake.sub$dateTime[quake.sub$mag > 6.5]),
 #                 colour="red", alpha=0.25) +
