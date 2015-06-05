@@ -1,2 +1,0 @@
-Data was downloaded from http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php
-on 2015-05-12 20:47:05 ACST

@@ -16,7 +16,7 @@ require(ggplot2)
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #*     Read and prepare data
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-quake.file <- "C:/Users/Lenovo/github/quake2/data/all_month_merged.csv"  
+quake.file <- "data/all_month_merged.csv"  
 quake <- read.csv(quake.file,
                   colClasses = c("character", "numeric", "numeric",
                                  "numeric", "numeric", "character",
@@ -49,18 +49,36 @@ pu <- paste("<b>Mag:</b>", as.character(quake.sub$mag), "<br>",
             "<b>Place:</b>", quake.sub$place)
 # shiny session
 function(input, output, session) {
-  ##  get date range
-  # this.date <- reactive(input$daterange)
+  #filter quake fn
+  getQuakes <- function() {
+    startDate <- as.POSIXlt(paste(as.character(input$daterange[1]),
+                                  "00:00:01"))
+    endDate <- as.POSIXlt(paste(as.character(input$daterange[2]),
+                                "23:59:01"))
+    quake.sub <- quake.sub[quake.sub$dateTime > startDate &
+                             quake.sub$dateTime < endDate,]
+    return(quake.sub)
+  }
   ## leaflet map
- qm <- leaflet(data=quake.sub) %>% addProviderTiles() %>%
-   setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
-   addCircleMarkers(~longitude, ~latitude,
-                    popup = pu,
-                    radius = ~ifelse(mag < 3.9, 4, 5),
-                    color = ~pallet(size),
-                    stroke = FALSE, fillOpacity = 0.6)
+#  qm <- leaflet(data=quake.sub) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
+#    setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
+#    addCircleMarkers(~longitude, ~latitude,
+#                     popup = pu,
+#                     radius = ~ifelse(mag < 3.9, 4, 5),
+#                     color = ~pallet(size),
+#                     stroke = FALSE, fillOpacity = 0.6)
+  qm <- function() {
+    qm <- leaflet(data=getQuakes()) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
+      setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
+      addCircleMarkers(~longitude, ~latitude,
+                       popup = pu,
+                       radius = ~ifelse(mag < 3.9, 4, 5),
+                       color = ~pallet(size),
+                       stroke = FALSE, fillOpacity = 0.6)
+  }
  ## timeline
- drawHist <-    eventReactive(input$refreshButton, {
+ drawHist <-    eventReactive(input$updateButton, {
+   quake.sub <- getQuakes()
    ggplot(quake.sub, aes(dateTime, mag, colour=size)) +
      geom_bar(stat="identity", colour="gray60",
               fill="red", alpha=0.5) +
@@ -85,8 +103,8 @@ function(input, output, session) {
          panel.border = element_blank(),
          legend.position = "none")
  })
- #  frequency table
- output$outFrequency <- renderTable({
+ quakeSummaryTable <- eventReactive(input$updateButton, {
+   quake.sub <- getQuakes()
    freq <- table(quake.sub$size)
    ftab <- data.frame(cbind(names(freq),
                             freq,
@@ -96,7 +114,21 @@ function(input, output, session) {
    row.names(ftab) <- NULL
    ftab
  })
- quakeHist <- eventReactive(input$histButton, {
+ #  frequency table
+ output$outFrequency <- renderTable(quakeSummaryTable())
+ 
+#  quakeDataTable <- eventReactive(input$updateButton, {
+#    quake.sub <- getQuakes()
+#    quake.sub[,c(5, 4, 3, 6, 8:10, 12:13)]
+#  })
+ 
+ quakeHist <- eventReactive(input$updateButton, {
+   #filter quakes
+#    startDate <- as.POSIXlt(paste(as.character(input$daterange[1]),
+#                                  "00:00:01"))
+#    endDate <- as.POSIXlt(paste(as.character(input$daterange[2]),
+#                                "23:59:01"))
+   quake.sub <- getQuakes()
    #  draw quake histogram
    ggplot(data=quake.sub, aes(x=mag)) +
      geom_histogram(aes(fill = ..count..), binwidth=0.25,
@@ -115,13 +147,13 @@ function(input, output, session) {
  }
  )
  #update map
- output$quakemap <- renderLeaflet(qm)
+ output$quakemap <- renderLeaflet(qm())
  #count total quakes
  output$countQuake <- renderText(paste("There were a total of<b>",
-                                       nrow(quake.sub),
+                                       nrow(getQuakes()),
                                        "</b> quakes recorded from <b>",
                                        as.character(input$daterange[1]),
-                                       "to", as.character(input$daterange[2]),
+                                       "</b>to<b>", as.character(input$daterange[2]),
                                        "</b>.<br>"))
  output$adf <- renderText({
    paste(as.character(input$daterange))
@@ -133,5 +165,6 @@ function(input, output, session) {
  #update histogram
  output$quakeHist <- renderPlot(quakeHist())
  #update table
- output$quaketable <- renderDataTable(quake.sub[,c(5, 4, 3, 6, 8:10, 12:13)])
+ # output$quaketable <- renderDataTable(quakeDataTable())
+ output$quaketable <- renderDataTable(getQuakes()[,c(5, 4, 3, 6, 8:10, 12:13)])
 }

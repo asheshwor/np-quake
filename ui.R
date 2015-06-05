@@ -3,20 +3,13 @@
 #*  2015-05-31                                                         *
 #*                                                                     *
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-#
-#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-#*     Load packages
-#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
 library(shinydashboard)
 library(leaflet)
 # library(shinythemes)
-
 header <- dashboardHeader(
   title = "Nepal quake"
 )
-# ntext <- eventReactive(input$goButton, {
-#   input$n
-# })
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Dashboard", tabName="dashboard", icon = icon("tachometer")),
@@ -32,72 +25,55 @@ body <- dashboardBody(
     tabItem(tabName ="dashboard",
             # h2("Map"),
             fluidRow(
-#               column(width = 12,
-#                      box(width = NULL, solidHeader = TRUE,
-#                          leafletOutput("quakemap", height = 400)
-#                      )
-#               ),
+              column(width = 12,
+                     box(width = NULL, solidHeader = TRUE,
+                         leafletOutput("quakemap", height = 400),
+                         htmlOutput("countQuake", inline = FALSE)
+                     )
+              ),
               column(width=12,
-                     box(title='Timeline', solidHeader=TRUE,
+                     box(#title="Select time window",
+                         background = "red",
+                         # solidHeader = TRUE,
+                         width=NULL,
+                         # collapsible=TRUE,
+                         dateRangeInput("daterange", "Select date range:",
+                                        start = "2015-04-12",
+                                        end   = "2015-06-04",
+                                        min = "2015-04-12",
+                                        max = "2015-06-04"),
+                         actionButton("updateButton", "Update graphs")
+                         # verbatimTextOutput("adf")
+                         )),
+              column(width=12,
+                     box(title='Quake timeline', solidHeader=TRUE,
                          background = "light-blue",
                          width = NULL,
                          collapsible = TRUE,
-                         htmlOutput("countQuake", inline = FALSE),
-                         plotOutput("magHist", height=200),
-                         actionButton("refreshButton", "Draw timeline")
+                         plotOutput("magHist", height=200)
+                         # actionButton("refreshButton", "Draw timeline")
                      )
                      
               ),
-              column(width=3,
-                     box(title="Select time window",
-                         background = "green",
+              column(width=6,
+                     box(title="Histogram",
+                         background = "light-blue",
                          solidHeader = TRUE,
                          width=NULL,
+                         # status = "success",
                          collapsible=TRUE,
-                         dateRangeInput("daterange", "Select date range:",
-                                        start = "2015-04-12",
-                                        end   = "2015-06-02"),
-                         actionButton("updateButton", "Update daterange"),
-                         verbatimTextOutput("adf")
-                         )),
-              column(width=3,
+                         plotOutput("quakeHist", height = 200)
+                         # actionButton("histButton", "Draw histogram")
+                     )),
+              column(width=6, #3
                      box(title="Frequency table",
-                         background = "black",
-                         status="success",
+                         background = "light-blue",
+                         # status="success",
                          solidHeader = TRUE,
                          width=NULL,
                          collapsible=TRUE,
                          tableOutput("outFrequency")
-                     )),
-              column(width=6,
-                     box(title="Histogram",
-                         background = "green",
-                         solidHeader = TRUE,
-                         width=NULL,
-                         status = "success",
-                         collapsible=TRUE,
-                         plotOutput("quakeHist", height = 200),
-                         actionButton("histButton", "Draw histogram")
-                         ))
-#               column(width = 12, 
-#                      box(width = NULL, status = "warning",
-#                          uiOutput("magselect"),
-#                          checkboxGroupInput("magnitude", "Quake magnitude",
-#                                             choices = c(
-#                                               Small = 4.5,
-#                                               Medium = 6,
-#                                               Large = 7
-#                                             ),
-#                                             selected = c(1, 2, 3)
-#                          ),
-#                          p(
-#                            class = "text-muted",
-#                            paste("Select magnitude"
-#                            )
-#                          )
-#                          # actionButton("refreshButton", "Refresh map")
-#                      )
-#               )
+                     )) #
   )),
   ## About tab
   tabItem(tabName ="help",
@@ -115,13 +91,10 @@ body <- dashboardBody(
   tabItem(tabName ="source",
           h1("About"),
           includeHTML("about.txt")
-          # includeText("about.txt"),
-#           br(),
-#           p("github.com/asheshwor/quake")
   )
 ))
 
-dashboardPage(skin='red',
+dashboardPage(skin='green',
   header,
   sidebar,
   body
