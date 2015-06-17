@@ -13,8 +13,9 @@ header <- dashboardHeader(
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Dashboard", tabName="dashboard", icon = icon("tachometer")),
-    menuItem("Data",tabName="help", icon = icon("table")),
-    menuItem("About", tabName="source", icon = icon("info"))
+    menuItem("Impact", tabName="damage", icon = icon("ambulance")),
+    menuItem("Data", tabName="data", icon = icon("table")),
+    menuItem("About", tabName="about", icon = icon("info"))
   )
 )
 body <- dashboardBody(
@@ -27,7 +28,7 @@ body <- dashboardBody(
             fluidRow(
               column(width = 12,
                      box(width = NULL, solidHeader = TRUE,
-                         leafletOutput("quakemap", height = 400),
+                         # leafletOutput("quakemap", height = 400),
                          htmlOutput("countQuake", inline = FALSE)
                      )
               ),
@@ -75,20 +76,39 @@ body <- dashboardBody(
                          tableOutput("outFrequency")
                      )) #
   )),
-  ## About tab
-  tabItem(tabName ="help",
+  ## Damage tab
+  tabItem(tabName ="damage",
+            fluidRow(
+              column(width = 12,
+                     h2("Fatalities and injuries"),
+                     box(width = NULL, solidHeader = TRUE,
+                         # leafletOutput("damagemap", height = 400),
+                         br(),
+                         box(title='Damage graph', solidHeader=TRUE,
+                             background = "light-blue",
+                             width = NULL,
+                             collapsible = TRUE,
+                             plotOutput("damagegraph", height=400)
+                             # actionButton("refreshButton", "Draw timeline")
+                         )
+                         # htmlOutput("countQuake", inline = FALSE)
+                     )
+              ))
+  ),
+  ## Data tab
+  tabItem(tabName ="data",
           fluidRow(
           column(width=12,
                  h2("Data"),
                  p("Data source: Earthquake data downloaded from http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php"),
-                 box(title = 'Quake table', solidHeader=TRUE,
+                 box(title = 'Earthquake records', solidHeader=TRUE,
                      width = 12, collapsible=FALSE,
                      dataTableOutput("quaketable")
                  )
           ))
   ),
-  ## Source tab
-  tabItem(tabName ="source",
+  ## About tab
+  tabItem(tabName ="about",
           h1("About"),
           includeHTML("about.txt")
   )
