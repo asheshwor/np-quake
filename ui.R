@@ -13,7 +13,7 @@ header <- dashboardHeader(
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Dashboard", tabName="dashboard", icon = icon("tachometer")),
-    menuItem("Impact", tabName="damage", icon = icon("ambulance")),
+    # menuItem("Impact", tabName="damage", icon = icon("ambulance")),
     menuItem("Data", tabName="data", icon = icon("table")),
     menuItem("About", tabName="about", icon = icon("info"))
   )
@@ -28,7 +28,7 @@ body <- dashboardBody(
             fluidRow(
               column(width = 12,
                      box(width = NULL, solidHeader = TRUE,
-                         # leafletOutput("quakemap", height = 400),
+                         leafletOutput("quakemap", height = 400),
                          htmlOutput("countQuake", inline = FALSE)
                      )
               ),
@@ -77,24 +77,24 @@ body <- dashboardBody(
                      )) #
   )),
   ## Damage tab
-  tabItem(tabName ="damage",
-            fluidRow(
-              column(width = 12,
-                     h2("Fatalities and injuries"),
-                     box(width = NULL, solidHeader = TRUE,
-                         # leafletOutput("damagemap", height = 400),
-                         br(),
-                         box(title='Damage graph', solidHeader=TRUE,
-                             background = "light-blue",
-                             width = NULL,
-                             collapsible = TRUE,
-                             plotOutput("damagegraph", height=400)
-                             # actionButton("refreshButton", "Draw timeline")
-                         )
-                         # htmlOutput("countQuake", inline = FALSE)
-                     )
-              ))
-  ),
+#   tabItem(tabName ="damage",
+#             fluidRow(
+#               column(width = 12,
+#                      h2("Fatalities and injuries"),
+#                      box(width = NULL, solidHeader = TRUE,
+#                          # leafletOutput("damagemap", height = 400),
+#                          br(),
+#                          box(title='Damage graph', solidHeader=TRUE,
+#                              background = "light-blue",
+#                              width = NULL,
+#                              collapsible = TRUE,
+#                              plotOutput("damagegraph", height=400)
+#                              # actionButton("refreshButton", "Draw timeline")
+#                          )
+#                          # htmlOutput("countQuake", inline = FALSE)
+#                      )
+#               ))
+#   ),
   ## Data tab
   tabItem(tabName ="data",
           fluidRow(
