@@ -5,7 +5,7 @@ This is a simple implementation of Shiny dashboard to explore the [Nepal earthqu
 ![app screenshot](pictures/1dash.png)
 <small>Screenshot of app's dashboard page</small>
 
-You can try the app live at: [https://asheshwor.shinyapps.io/np-quake](asheshwor.shinyapps.io/np-quake). If this doesn't work it's probably the free server limit has been exceeded.
+You can try the app live at: [https://asheshwor.shinyapps.io/np-quake](https://asheshwor.shinyapps.io/np-quake). If this doesn't work it's probably the free server limit has been exceeded.
 
 You can also run the app locally (if you have RStudio and Shiny installed) by using the following command.
 
