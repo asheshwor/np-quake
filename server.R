@@ -19,7 +19,6 @@ library(jsonlite)
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #*     Read and prepare data
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-quake.file <- "data/all_month_merged.csv"  
 quake <- read.csv(quake.file,
                   colClasses = c("character", "numeric", "numeric",
                                  "numeric", "numeric", "character",
