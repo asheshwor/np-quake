@@ -12,13 +12,14 @@ library(leaflet)
 library(dplyr)
 library(scales)
 require(ggplot2)
-library(data.table)
-require(rgdal)
-library(jsonlite)
+# library(data.table)
+# require(rgdal)
+# library(jsonlite)
 # require(htmltools)
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #*     Read and prepare data
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+quake.file <- "data/all_month_merged.csv"  
 quake <- read.csv(quake.file,
                   colClasses = c("character", "numeric", "numeric",
                                  "numeric", "numeric", "character",
