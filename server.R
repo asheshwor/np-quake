@@ -88,7 +88,7 @@ function(input, output, session) {
  drawHist <-    eventReactive(input$updateButton, {
    quake.sub <- getQuakes()
    ggplot(quake.sub, aes(dateTime, mag, colour=size)) +
-     geom_bar(stat="identity", colour=NA,
+     geom_bar(stat="identity", colour="gray60",
               fill="gray60", alpha=0.5) +
      geom_point(size=3) +
      scale_colour_manual(name = "size",
