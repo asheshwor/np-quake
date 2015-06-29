@@ -2,12 +2,12 @@
 
 This is a simple implementation of Shiny dashboard to explore the [Nepal earthquake](http://en.wikipedia.org/wiki/April_2015_Nepal_earthquake) data. The earthquake data used here is NOT real-time. The data was downloaded from USGS (csv format) and can be updated by replacing the file in the data folder. To filter the quakes in the vicinity of Nepal, only the quakes within the bounding box of Nepal map are used.
 
-![app screenshot](pictures/1dash.png)
+![app screen-shot](pictures/1dash.png)
 <small>Screenshot of app's dashboard page</small>
 
 You can try the app live at: [https://asheshwor.shinyapps.io/np-quake](https://asheshwor.shinyapps.io/np-quake). If this doesn't work it's probably the free server limit has been exceeded.
 
-You can also run the app locally (if you have RStudio and Shiny installed) by using the following command.
+You can also run the app locally (if you have [RStudio](http://www.rstudio.com/) and [Shiny](http://cran.r-project.org/web/packages/shiny/index.html) installed) by using the following command.
 
 ```R
 shiny::runGitHub('np-quake', 'asheshwor')
