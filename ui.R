@@ -1,6 +1,6 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #*          Nepal quake dashboard                                      *
-#*  2015-05-31                                                         *
+#*  2015-05-31; data till 2015-07-06                                 *
 #*                                                                     *
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
@@ -40,9 +40,9 @@ body <- dashboardBody(
                          # collapsible=TRUE,
                          dateRangeInput("daterange", "Select date range:",
                                         start = "2015-04-12",
-                                        end   = "2015-06-29",
+                                        end   = "2015-07-06,
                                         min = "2015-04-12",
-                                        max = "2015-06-29"),
+                                        max = "2015-07-06),
                          actionButton("updateButton", "Update graphs")
                          # verbatimTextOutput("adf")
                          )),
