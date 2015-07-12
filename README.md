@@ -1,17 +1,20 @@
 #About Nepal Quake dashboard
 
-This is a simple implementation of Shiny dashboard to explore the [Nepal earthquake](http://en.wikipedia.org/wiki/April_2015_Nepal_earthquake) data. The earthquake data used here is NOT real-time. The data was downloaded from USGS (csv format) and can be updated by replacing the file in the data folder. To filter the quakes in the vicinity of Nepal, only the quakes within the bounding box of Nepal map are selected.
+This is a simple implementation of Shiny dashboard to explore the [Nepal earthquake](http://en.wikipedia.org/wiki/April_2015_Nepal_earthquake) data. The earthquake data used here is NOT real-time. The records were downloaded from USGS website (csv format) and placed in the data folder. To filter the quakes in the vicinity of Nepal, only the quakes within the bounding box of Nepal map are used.
 
-![app screen-shot](pictures/1dash.png)
-<small>Screenshot of app's dashboard page</small>
+You can try the app live at: [https://asheshwor.shinyapps.io/np-quake](asheshwor.shinyapps.io/np-quake).
 
-You can try the app live at: [https://asheshwor.shinyapps.io/np-quake](https://asheshwor.shinyapps.io/np-quake).
-
-You can also run the app locally (if you have [RStudio](http://www.rstudio.com/) and [Shiny](http://cran.r-project.org/web/packages/shiny/index.html) installed) by using the following command.
+You can also run the app locally (if you have RStudio and Shiny installed) by using the following command.
 
 ```R
 shiny::runGitHub('np-quake', 'asheshwor')
 ````
+
+![app screenshot](pictures/1dash.png)
+<small>Screenshot of app's front page</small>
+
+![app screenshot](pictures/2dash.png)
+<small>Screenshot of app's fatalities page</small>
 
 ## Disclaimer
 
@@ -24,6 +27,10 @@ I am not an earthquake expert. This is not at an attempt to predict aftershock e
 *   dplyr
 *   scales
 *   ggplot2
+*   reshape2
+*   data.table
+*   rgdal
+*   jsonlite
 
 ## Source code
 
@@ -31,5 +38,7 @@ Full source code is available from the following github repo: [https://github.co
 
 ## Attribution
 
-**Earthquake data:** This app uses earthquake data from USGS http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php  
+**Earthquake data:** This app uses earthquake data from USGS [http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php](http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php)  
+ **Fatalities, injuries and damage data:** Ministry of Home Affairs (MoHA)/National Emergency Operation Center (NEOC) official figures for casualties and damages [5 June update] [MoHA/NEOC official figures Google spreadsheet link](https://docs.google.com/spreadsheets/d/1MCsMtcfN8jwGg4qdzYZCKyxpYp8cdqRSrEpF1WpR6ZE/edit#gid=1367273225)  
+ **Nepal districts map geojson file:** Shared under MIT license by Saugat Acharya [https://github.com/mesaugat/geoJSON-Nepal](https://github.com/mesaugat/geoJSON-Nepal)  
  **Map data:** The maps are generated using [leaflet for R](https://rstudio.github.io/leaflet/). Map tiles from [Mapbox](https://www.mapbox.com/). Mapbox uses map data from [Open Street Maps](http://www.openstreetmap.org/).

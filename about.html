@@ -1,0 +1,31 @@
+    <p>This is a simple implementation of Shiny dashboard to explore the <a href="http://en.wikipedia.org/wiki/April_2015_Nepal_earthquake" target="_blank">Nepal earthquake</a> data. The earthquake data used here is NOT real-time. The records were downloaded from USGS website (csv format) and placed in the data folder. To filter the quakes in the vicinity of Nepal, only the quakes within the bounding box of Nepal map are used.</p>
+
+    <p><b>You can try the app at:</b> <a href="asheshwor.shinyapps.io/np-quake" target="_blank">https://asheshwor.shinyapps.io/np-quake</a>.</p>
+
+    <p>You can also <b>run the app locally</b> (if you have RStudio and Shiny installed) by using the following command:</p>
+    <pre>shiny::runGitHub('np-quake', 'asheshwor')</pre>
+
+<h3>Disclaimer</h3>
+    <p>I am not an earthquake expert. This is not at an attempt to predict aftershock events.</p>
+<h3>R packages used</h3>
+    <ul>
+        <li>shinydashboard</li>
+        <li>leaflet</li>
+        <li>dplyr</li>
+        <li>scales</li>
+        <li>ggplot2</li>
+        <li>reshape2</li>
+        <li>data.table</li>
+        <li>rgdal</li>
+        <li>jsonlite</li>
+    </ul>
+
+<h3>Source code</h3>
+    <p>Full source code is available from the following github repo: <a href="https://github.com/asheshwor/np-quake">https://github.com/asheshwor/np-quake</a></p>
+
+<h3>Attribution</h3>
+    <p><b>Earthquake data:</b> This app uses earthquake data from USGS <a href="http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php" target="_blank">http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php</a><br>
+        <b>Fatalities, injuries and damage data:</b> Ministry of Home Affairs (MoHA)/National Emergency Operation Center (NEOC) official figures for casualties and damages [5 June update] <a href="https://docs.google.com/spreadsheets/d/1MCsMtcfN8jwGg4qdzYZCKyxpYp8cdqRSrEpF1WpR6ZE/edit#gid=1367273225" target="_blank">MoHA/NEOC official figures Google spreadsheet link</a><br>
+        <b>Nepal districts map geojson file:</b> Shared under MIT license by Saugat Acharya <a href="https://github.com/mesaugat/geoJSON-Nepal" target="_blank">https://github.com/mesaugat/geoJSON-Nepal</a><br>
+    <b>Map data:</b> The maps are generated using <a href="https://rstudio.github.io/leaflet/" target="_blank">leaflet for R</a>. Map tiles from <a href="https://www.mapbox.com/" target="_blank">Mapbox</a>. Mapbox uses map data from <a href="http://www.openstreetmap.org/" target="_blank">Open Street Maps</a>.</p>
+<br>

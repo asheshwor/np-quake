@@ -1,6 +1,6 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #*          Nepal quake dashboard                                      *
-#*  2015-05-31; data till 2015-07-06                                 *
+#*  2015-05-31, 2015-07-12                                             *
 #*                                                                     *
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
@@ -12,8 +12,8 @@ header <- dashboardHeader(
 )
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Dashboard", tabName="dashboard", icon = icon("tachometer")),
-    # menuItem("Impact", tabName="damage", icon = icon("ambulance")),
+    menuItem("Earthquakes", tabName="dashboard", icon = icon("bullseye")),
+    menuItem("Fatalities", tabName="damage", icon = icon("ambulance")),
     menuItem("Data", tabName="data", icon = icon("table")),
     menuItem("About", tabName="about", icon = icon("info"))
   )
@@ -40,9 +40,9 @@ body <- dashboardBody(
                          # collapsible=TRUE,
                          dateRangeInput("daterange", "Select date range:",
                                         start = "2015-04-12",
-                                        end   = "2015-07-07",
+                                        end   = "2015-06-13",
                                         min = "2015-04-12",
-                                        max = "2015-07-07"),
+                                        max = "2015-06-13"),
                          actionButton("updateButton", "Update graphs")
                          # verbatimTextOutput("adf")
                          )),
@@ -77,40 +77,54 @@ body <- dashboardBody(
                      )) #
   )),
   ## Damage tab
-#   tabItem(tabName ="damage",
-#             fluidRow(
-#               column(width = 12,
-#                      h2("Fatalities and injuries"),
-#                      box(width = NULL, solidHeader = TRUE,
-#                          # leafletOutput("damagemap", height = 400),
-#                          br(),
-#                          box(title='Damage graph', solidHeader=TRUE,
-#                              background = "light-blue",
-#                              width = NULL,
-#                              collapsible = TRUE,
-#                              plotOutput("damagegraph", height=400)
-#                              # actionButton("refreshButton", "Draw timeline")
-#                          )
-#                          # htmlOutput("countQuake", inline = FALSE)
-#                      )
-#               ))
-#   ),
+  tabItem(tabName ="damage",
+            fluidRow(
+              column(width = 12,
+                     # h2("Fatalities and injuries"),
+                     box(width = NULL, solidHeader = TRUE,
+                         leafletOutput("damagemap", height = 400),
+                         br(),
+                         box(title='Fatalities by gender (12 most impacted districts)', solidHeader=TRUE,
+                             background = "black",
+                             width = NULL,
+                             collapsible = TRUE,
+                             plotOutput("damagegraph", height=400)
+                             # 
+                         )
+                         # 
+                     )
+              ))
+  ),
   ## Data tab
   tabItem(tabName ="data",
-          fluidRow(
-          column(width=12,
-                 h2("Data"),
-                 p("Data source: Earthquake data downloaded from http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php"),
-                 box(title = 'Earthquake records', solidHeader=TRUE,
-                     width = 12, collapsible=FALSE,
-                     dataTableOutput("quaketable")
-                 )
-          ))
-  ),
+          tabsetPanel(
+            tabPanel("Earthquakes", #tabPanel 1
+                     fluidRow(
+                       column(width=12,
+                              # h2("Data"),
+                              # p("Source: USGS"),
+                              box(title = 'Earthquake records from USGS', solidHeader=TRUE,
+                                  width = 12, collapsible=FALSE,
+                                  dataTableOutput("quaketable")
+                              )
+                       )) #end fluidRow
+            ), #end tabPanel 1
+            tabPanel("Fatalities, injuries and damage", #tabPanel 2
+                     fluidRow(
+                       column(width=12,
+                              # h2("Data"),
+                              # p("Source: Ministry of Home Affairs (MoHA)/National Emergency Operation Center (NEOC) official figures for casualties and damages [5 June update] "),
+                              box(title = "MoHA/NEOC official fatalities, injuries and damage figures", solidHeader=TRUE,
+                                  width = 12, collapsible=FALSE,
+                                  dataTableOutput("damagetable")
+                              )
+                       )) #end fluidRow
+                     )
+  )),
   ## About tab
   tabItem(tabName ="about",
-          h1("About"),
-          includeHTML("about.txt")
+          # h1("About"),
+          includeHTML("about.html")
   )
 ))
 

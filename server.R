@@ -1,6 +1,6 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #*          Nepal quake dashboard                                      *
-#*  2015-05-31                                                         *
+#*  2015-05-31, 2015-07-12                                             *
 #*                                                                     *
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #
@@ -10,12 +10,12 @@
 library(shinydashboard)
 library(leaflet)
 library(dplyr)
+require(reshape2)
 library(scales)
 require(ggplot2)
-# library(data.table)
-# require(rgdal)
-# library(jsonlite)
-# require(htmltools)
+library(data.table)
+require(rgdal)
+library(jsonlite)
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #*     Read and prepare data
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -85,10 +85,10 @@ function(input, output, session) {
     } else return(tempmap)
   }
  ## timeline
- drawHist <-    eventReactive(input$updateButton, {
+ drawHist <- eventReactive(input$updateButton, {
    quake.sub <- getQuakes()
    ggplot(quake.sub, aes(dateTime, mag, colour=size)) +
-     geom_bar(stat="identity", colour="gray60",
+     geom_bar(stat="identity", colour=NA,
               fill="gray60", alpha=0.5) +
      geom_point(size=3) +
      scale_colour_manual(name = "size",
@@ -123,44 +123,37 @@ function(input, output, session) {
    ftab
  })
  #function to draw damage graph
-#  damage <- read.csv("C:/Users/Lenovo/github/np-quake2/data/damage.csv")
-#  damage$DISTRICT <- toupper(damage$DISTRICT)
-#  drawdamage <- function() {
-#    #convert to long format
-#    damage.sub <- damage[damage$TOTALDEATH > 0,]
-#    damage.sub <- damage[order(damage$TOTALDEATH, decreasing = TRUE),]
-#    damage.sub$DISTRICT <- factor(damage.sub$DISTRICT, damage.sub$DISTRICT, ordered = TRUE)
-#    damage.sub <- damage.sub[1:12,]
-#    adf <- ggplot(damage.sub, aes(DISTRICT, TOTALDEATH)) +
-#      geom_bar(stat="identity", colour=NA,
-#               fill="firebrick3", alpha=0.5) +
-#      # ylim(c(2, 8)) +
-#      xlab("") + ylab("Fatalities") +
-#      theme(plot.background = element_rect(fill = "white", colour = NA),
-#            panel.background = element_rect(fill = "white", colour = NA),
-#            title = element_text(colour="black", size = 13),
-#            axis.title.x = element_text(hjust=1, colour="black", size = 8),
-#            axis.title.y = element_text(vjust=90, colour="dodgerblue4", size = 8),
-#            panel.grid.major = element_blank(),
-#            panel.grid.minor = element_blank(),
-#            panel.border = element_blank(),
-#            legend.position = "none")
-#    return(adf)
-#  }
+ damage <- read.csv("data/damage.csv")
+ damage$DISTRICT <- toupper(damage$DISTRICT)
+ drawdamage <- function() {
+   damage.sub <- damage[damage$TOTALDEATH > 0,]
+   damage.sub <- damage[order(damage$TOTALDEATH, decreasing = TRUE),]
+   damage.sub$DISTRICT <- factor(damage.sub$DISTRICT, damage.sub$DISTRICT, ordered = TRUE)
+   damage.sub <- damage.sub[1:12, c(2,5:6)]
+   #melt
+   damage.sub <- melt(damage.sub, id.vars = "DISTRICT")
+   ggplot(damage.sub, aes(x = DISTRICT, y = value, fill=variable)) +
+     geom_bar(stat='identity')
+   adf <- ggplot(damage.sub,
+                 aes(x = DISTRICT, y = value,
+                     fill=variable), colour=NA) +
+     geom_bar(stat="identity", position="dodge") +
+     scale_fill_manual(values = c("gray30","gray60"), name="Legend") +
+     # geom_text(aes(label = value, position=value), size = 3) + 
+     xlab("") + ylab("Fatalities") +
+     theme(plot.background = element_rect(fill = "white", colour = NA),
+           panel.background = element_rect(fill = "white", colour = NA),
+           title = element_text(colour="black", size = 13),
+           axis.title.x = element_text(hjust=1, colour="black", size = 8),
+           axis.title.y = element_text(vjust=90, colour="black", size = 8),
+           panel.border = element_blank(),
+           legend.position = "bottom")
+   return(adf)
+ }
  #  frequency table
  output$outFrequency <- renderTable(quakeSummaryTable())
  
-#  quakeDataTable <- eventReactive(input$updateButton, {
-#    quake.sub <- getQuakes()
-#    quake.sub[,c(5, 4, 3, 6, 8:10, 12:13)]
-#  })
- 
  quakeHist <- eventReactive(input$updateButton, {
-   #filter quakes
-#    startDate <- as.POSIXlt(paste(as.character(input$daterange[1]),
-#                                  "00:00:01"))
-#    endDate <- as.POSIXlt(paste(as.character(input$daterange[2]),
-#                                "23:59:01"))
    quake.sub <- getQuakes()
    #  draw quake histogram
    ggplot(data=quake.sub, aes(x=mag)) +
@@ -171,8 +164,6 @@ function(input, output, session) {
      theme(plot.background = element_rect(fill = "white", colour = NA),
            panel.background = element_rect(fill = "white", colour = NA),
            title = element_text(colour="black", size = 13),
-#            axis.title.x = element_text(hjust=1, colour="black", size = 8),
-#            axis.title.y = element_text(vjust=90, colour="dodgerblue4", size = 8),
            panel.grid.major = element_blank(),
            panel.grid.minor = element_blank(),
            panel.border = element_blank(),
@@ -181,45 +172,45 @@ function(input, output, session) {
  )
  #damage map
  #read map data
-#  map <- readOGR("C:/Users/Lenovo/github/np-quake2/mapdata/nepal-district.geojson", "OGRGeoJSON")
-#  map$rn <- row.names(map)
-#  tmp.map <- data.table(map@data)
-#  merged <- merge(tmp.map, damage, by="DISTRICT", all.x=TRUE)
-#  merged$roll <- as.numeric(merged$rn)
-#  merged <- merged[with(merged, order(roll)),]
-#  # merged$cut <- cut(damage$TOTALDEATH, breaks=c(0,10,100,500,1000,4000), include.lowest=TRUE, dig.lab=4)
-#  ##  Popup
-#  pu2 <- paste("<b>", as.character(tmp.map$DISTRICT), "</b><br>",
-#              "<b>Deaths:</b><b>", as.character(merged$TOTALDEATH), "</b><br>",
-#              "<b>Deaths - Female:</b>", as.character(merged$DEATHFEMALE), "<br>",
-#              "<b>Deaths - Male:</b>", as.character(merged$DEATHMALE), "<br>",
-#              "<b>Deaths - Unknown:</b>", as.character(merged$DEATHUNKNOWN), "<br>",
-#              "<b>Injured:</b>", as.character(merged$INJURED), "<br>"
-#  )
-#  
-#  ##  Draw map
-#  pal2 <- colorNumeric(c(NA, "firebrick1", "firebrick4"), c(0, 10, 100, 500, 1000, 3500))
-#  damagemap <- leaflet(map) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
-#    setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
-#    addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
-#    addPolygons(
-#      fillOpacity = 0.6,
-#      fillColor = ~pal2(merged$TOTALDEATH),
-#      smoothFactor = 0.5,
-#      color = "darkgreen", weight=2,
-#      popup = pu2
-#    ) %>%
-#    addLegend("bottomleft", pal = pal2,
-#              values = merged$TOTALDEATH,
-#              title = "Total deaths",
-#              labFormat = labelFormat()
-#    )
+ map <- readOGR("mapdata/nepal-district.geojson", "OGRGeoJSON")
+ map$rn <- row.names(map)
+ tmp.map <- data.table(map@data)
+ merged <- merge(tmp.map, damage, by="DISTRICT", all.x=TRUE)
+ merged$roll <- as.numeric(merged$rn)
+ merged <- merged[with(merged, order(roll)),]
+ # merged$cut <- cut(damage$TOTALDEATH, breaks=c(0,10,100,500,1000,4000), include.lowest=TRUE, dig.lab=4)
+ ##  Popup
+ pu2 <- paste("<b>", as.character(tmp.map$DISTRICT), "</b><br>",
+             "<b>Deaths:</b><b>", as.character(merged$TOTALDEATH), "</b><br>",
+             "<b>Deaths - Female:</b>", as.character(merged$DEATHFEMALE), "<br>",
+             "<b>Deaths - Male:</b>", as.character(merged$DEATHMALE), "<br>",
+             "<b>Deaths - Unknown:</b>", as.character(merged$DEATHUNKNOWN), "<br>",
+             "<b>Injured:</b>", as.character(merged$INJURED), "<br>"
+ )
+ 
+ ##  Draw map
+ pal2 <- colorNumeric(c(NA, "firebrick1", "firebrick4"), c(0, 10, 100, 500, 1000, 3500))
+ damagemap <- leaflet(map) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
+   setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
+   addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
+   addPolygons(
+     fillOpacity = 0.6,
+     fillColor = ~pal2(merged$TOTALDEATH),
+     smoothFactor = 0.5,
+     color = "darkgreen", weight=2,
+     popup = pu2
+   ) %>%
+   addLegend("bottomleft", pal = pal2,
+             values = merged$TOTALDEATH,
+             title = "Total fatalities",
+             labFormat = labelFormat()
+   )
  #update map
  output$quakemap <- renderLeaflet(qm())
  #update damage map
- # output$damagemap <- renderLeaflet(damagemap)
+ output$damagemap <- renderLeaflet(damagemap)
  #update damage map
- # output$damagegraph <- renderLeaflet(drawdamage)
+ output$damagegraph <- renderPlot(drawdamage())
  #count total quakes
  output$countQuake <- renderText(paste("There were a total of<b>",
                                        nrow(getQuakes()),
@@ -239,4 +230,5 @@ function(input, output, session) {
  #update table
  # output$quaketable <- renderDataTable(quakeDataTable())
  output$quaketable <- renderDataTable(getQuakes()[,c(5, 4, 3, 6, 8:10, 12:13)])
+ output$damagetable <- renderDataTable(damage)
 }
