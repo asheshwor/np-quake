@@ -36,20 +36,14 @@ formatTime <- function(timeString) {
   fin <- paste0(split1[[1]][1], " ",split2[[1]][1])
 }
 quake$dateTime <- as.POSIXlt(sapply(quake$time, formatTime)) + 5.75*60*60
-# quake <- quake[with(quake, order(dateTime)), ]
-quake.sub <- quake[ ,c(2:5, 16, 6:12, 14)]
+quake <- quake[with(quake, order(dateTime)), ]
+quake.sub <- quake[ , c(2:5, 16, 6:12, 14)]
 quake.sub$size <- cut(quake.sub$mag,
                       c(2, 3.9, 4.9, 5.9, 6.9, 7.9),
                       labels=c("3.3 to 3.9", ">3.9 to 4.9", ">4.9 to 5.9", ">5.9 to 6.9", ">6.9 to 7.9"))
 # colour pallet
 pallet <- colorFactor(c("gray32", "dodgerblue4",  "slateblue4", "purple", "firebrick1"),
                    domain = c("3.3 to 3.9", ">3.9 to 4.9", ">4.9 to 5.9", ">5.9 to 6.9", ">6.9 to 7.9"))
-# create html for popup
-pu <- paste("<b>Mag:</b>", as.character(quake.sub$mag), "<br>",
-            "<b>Depth:</b>", as.character(quake.sub$depth), "km<br>",
-            "<b>Time:</b>", as.character.POSIXt(quake.sub$dateTime), "NST",
-            "<br>","<b>ID:</b>", quake.sub$id,"<br>",
-            "<b>Place:</b>", quake.sub$place)
 # shiny session
 function(input, output, session) {
   #filter quake fn
@@ -58,14 +52,22 @@ function(input, output, session) {
                                   "00:00:01"))
     endDate <- as.POSIXlt(paste(as.character(input$daterange[2]),
                                 "23:59:01"))
-    quake.sub <- quake.sub[quake.sub$dateTime > startDate &
+    quake.s <- quake.sub[quake.sub$dateTime > startDate &
                              quake.sub$dateTime < endDate,]
-    return(quake.sub)
+    return(quake.s)
   }
-
+  #leaflet quake map
   qm <- function() {
-    quakes.sub <- getQuakes()
-    tempmap <- leaflet(data=quakes.sub) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
+    quake.get <- getQuakes()
+    # create html for popup
+    pu <- paste("<b>Mag:</b>", as.character(quake.get$mag), "<br>",
+                "<b>Depth:</b>", as.character(quake.get$depth), "km<br>",
+                "<b>Time:</b>", as.character.POSIXt(quake.get$dateTime), "NST",
+                "<br>","<b>ID:</b>", quake.get$id,"<br>",
+                "<b>Place:</b>", quake.get$place #noticed some pecularities with the place, need to re-check
+    )
+    #map
+    tempmap <- leaflet(data=quake.get) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
       setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
       addCircleMarkers(~longitude, ~latitude,
                        popup = pu,
@@ -77,7 +79,7 @@ function(input, output, session) {
       tempmap2 <- tempmap %>%
         addLegend(
           "bottomleft", pal = pallet,
-          values = sort(quakes.sub$size),
+          values = sort(quake.get$size),
           title = "Magnitude"
           # labFormat = labelFormat()
         )
@@ -88,7 +90,7 @@ function(input, output, session) {
  drawHist <- eventReactive(input$updateButton, {
    quake.sub <- getQuakes()
    ggplot(quake.sub, aes(dateTime, mag, colour=size)) +
-     geom_bar(stat="identity", colour=NA,
+     geom_bar(stat="identity", colour="gray60",
               fill="gray60", alpha=0.5) +
      geom_point(size=3) +
      scale_colour_manual(name = "size",
