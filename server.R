@@ -73,18 +73,24 @@ function(input, output, session) {
                        popup = pu,
                        radius = ~ifelse(mag < 3.9, 4, 5),
                        color = ~pallet(size),
-                       stroke = FALSE, fillOpacity = 0.6)
+                       stroke = FALSE, fillOpacity = 0.6) %>%
+      addLegend(
+        "bottomleft", pal = pallet,
+        values = sort(quake.get$size),
+        title = "Magnitude"
+        # labFormat = labelFormat()
+      )
     ## Add a legend once only
-    if (input$updateButton == 0) {
-      tempmap2 <- tempmap %>%
-        addLegend(
-          "bottomleft", pal = pallet,
-          values = sort(quake.get$size),
-          title = "Magnitude"
-          # labFormat = labelFormat()
-        )
-      return(tempmap2)
-    } else return(tempmap)
+#     if (input$updateButton == 0) {
+#       tempmap2 <- tempmap %>%
+#         addLegend(
+#           "bottomleft", pal = pallet,
+#           values = sort(quake.get$size),
+#           title = "Magnitude"
+#           # labFormat = labelFormat()
+#         )
+#       return(tempmap2)
+#     } else return(tempmap)
   }
  ## timeline
  drawHist <- eventReactive(input$updateButton, {
