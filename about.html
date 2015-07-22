@@ -2,8 +2,17 @@
 
     <p><b>You can try the app at:</b> <a href="https://asheshwor.shinyapps.io/np-quake" target="_blank">https://asheshwor.shinyapps.io/np-quake</a>.</p>
 
-    <p>You can also <b>run the app locally</b> (if you have RStudio and Shiny installed) by using the following command:</p>
-    <pre>shiny::runGitHub('np-quake', 'asheshwor')</pre>
+    <p>You can also <b>run the app locally</b> (if you have RStudio installed) by using the following command:</p>
+    <pre>## Install missing packages
+packagesRequired <- c("shinydashboard", "leaflet", "dplyr",
+                      "reshape2", "scales", "ggplot2",
+                      "data.table", "rgdal", "jsonlite",
+                      "shiny")
+packagesToInstall <- packagesRequired[!(packagesRequired %in%
+                                          installed.packages()[,"Package"])]
+if(length(packagesToInstall)) install.packages(packagesToInstall)
+## Run app from Github repo
+shiny::runGitHub('asheshwor/np-quake')</pre>
 
 <h3>Disclaimer</h3>
     <p>I am not an earthquake expert. This is not at an attempt to predict aftershock events.</p>

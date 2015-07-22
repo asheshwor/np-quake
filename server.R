@@ -36,7 +36,7 @@ formatTime <- function(timeString) {
   fin <- paste0(split1[[1]][1], " ",split2[[1]][1])
 }
 quake$dateTime <- as.POSIXlt(sapply(quake$time, formatTime)) + 5.75*60*60
-quake <- quake[with(quake, order(dateTime)), ]
+# quake <- quake[with(quake, order(dateTime)), ]
 quake.sub <- quake[ , c(2:5, 16, 6:12, 14)]
 quake.sub$size <- cut(quake.sub$mag,
                       c(2, 3.9, 4.9, 5.9, 6.9, 7.9),
