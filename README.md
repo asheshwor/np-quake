@@ -4,10 +4,19 @@ This is a simple implementation of Shiny dashboard to explore the [Nepal earthqu
 
 You can try the app live at: [https://asheshwor.shinyapps.io/np-quake](https://asheshwor.shinyapps.io/np-quake).
 
-You can also run the app locally (if you have RStudio and Shiny installed) by using the following command.
+You can also run the app locally in RStudio by using the following code.
 
 ```R
-shiny::runGitHub('np-quake', 'asheshwor')
+## Install missing packages
+packagesRequired <- c("shinydashboard", "leaflet", "dplyr",
+                      "reshape2", "scales", "ggplot2",
+                      "data.table", "rgdal", "jsonlite",
+                      "shiny")
+packagesToInstall <- packagesRequired[!(packagesRequired %in%
+                                          installed.packages()[,"Package"])]
+if(length(packagesToInstall)) install.packages(packagesToInstall)
+## Run app from Github repo
+shiny::runGitHub('asheshwor/np-quake')
 ````
 
 ![app screenshot](pictures/1dash.png)
