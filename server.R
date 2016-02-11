@@ -105,7 +105,7 @@ function(input, output, session) {
                                     "firebrick1")) +
 #      geom_vline(xintercept = as.numeric(quake.sub$dateTime[quake.sub$mag > 6.5]),
 #                 colour="red", alpha=0.25) +
-   scale_x_datetime() +
+   scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%d-%b-%Y")) +
      scale_y_continuous(breaks=c(seq(1,9,2))) +
      # ylim(c(2, 8)) +
    xlab("") + ylab("Magnitude") +
