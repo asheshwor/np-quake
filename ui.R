@@ -40,9 +40,9 @@ body <- dashboardBody(
                          # collapsible=TRUE,
                          dateRangeInput("daterange", "Select date range:",
                                         start = "2015-04-12",
-                                        end   = "2016-03-12",
+                                        end   = "2016-04-11",
                                         min = "2015-04-12",
-                                        max = "2016-03-12"),
+                                        max = "2016-04-11"),
                          actionButton("updateButton", "Update graphs")
                          # verbatimTextOutput("adf")
                          )),
