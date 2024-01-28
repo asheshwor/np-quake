@@ -3,7 +3,8 @@
 #*  2015-05-31, 2015-07-12                                             *
 #*                                                                     *
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
+# 2023 update to fix 1) leaflet basemap error;
+#   2) remove reshape2, now depreciated, package
 library(shinydashboard)
 library(leaflet)
 # library(shinythemes)
@@ -15,7 +16,7 @@ sidebar <- dashboardSidebar(
     menuItem("Earthquakes", tabName="dashboard", icon = icon("bullseye")),
     menuItem("Fatalities", tabName="damage", icon = icon("ambulance")),
     menuItem("Data", tabName="data", icon = icon("table")),
-    menuItem("About", tabName="about", icon = icon("info"))
+    menuItem("About", tabName="about", icon = icon("circle-info"))
   )
 )
 body <- dashboardBody(
@@ -56,7 +57,7 @@ body <- dashboardBody(
                      )
                      
               ),
-              column(width=6,
+              column(width=8,
                      box(title="Histogram",
                          background = "light-blue",
                          solidHeader = TRUE,
@@ -66,7 +67,7 @@ body <- dashboardBody(
                          plotOutput("quakeHist", height = 200)
                          # actionButton("histButton", "Draw histogram")
                      )),
-              column(width=6, #3
+              column(width=4, #3
                      box(title="Frequency table",
                          background = "light-blue",
                          # status="success",

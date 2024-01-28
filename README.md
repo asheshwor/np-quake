@@ -4,12 +4,12 @@ This is a simple implementation of Shiny dashboard to explore the [Nepal earthqu
 
 You can try the app live at: [https://asheshwor.shinyapps.io/np-quake](https://asheshwor.shinyapps.io/np-quake).
 
-You can also run the app locally in RStudio by using the following code.
+Alternatively, you can also run the app locally in RStudio by using the following code.
 
 ```R
 ## Install missing packages
 packagesRequired <- c("shinydashboard", "leaflet", "dplyr",
-                      "reshape2", "scales", "ggplot2",
+                      "tidyverse", "scales", "ggplot2",
                       "data.table", "rgdal", "jsonlite",
                       "shiny")
 packagesToInstall <- packagesRequired[!(packagesRequired %in%
@@ -36,7 +36,8 @@ I am not an earthquake expert. This is not at an attempt to predict aftershock e
 *   dplyr
 *   scales
 *   ggplot2
-*   reshape2
+*   --reshape2--
+*   tidyverse
 *   data.table
 *   rgdal
 *   jsonlite

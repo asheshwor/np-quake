@@ -1,11 +1,11 @@
-    <p>This is a simple implementation of Shiny dashboard to explore the <a href="http://en.wikipedia.org/wiki/April_2015_Nepal_earthquake" target="_blank">Nepal earthquake</a> data. The earthquake data used here is NOT real-time. The records were downloaded from USGS website (csv format) and placed in the data folder. To filter the quakes in the vicinity of Nepal, only the quakes within the bounding box of Nepal map are used.</p>
+    <p>This is a simple implementation of Shiny dashboard to explore the <a href="http://en.wikipedia.org/wiki/April_2015_Nepal_earthquake" target="_blank">April 2015 Nepal earthquake</a> data. The earthquake data used here is NOT real-time. The records were downloaded from USGS website (csv format) and placed in the data folder. To filter the quakes in the vicinity of Nepal, only the quakes within the bounding box of Nepal map are used.</p>
 
     <p><b>You can try the app at:</b> <a href="https://asheshwor.shinyapps.io/np-quake" target="_blank">https://asheshwor.shinyapps.io/np-quake</a>.</p>
 
-    <p>You can also <b>run the app locally</b> (if you have RStudio installed) by using the following command:</p>
+    <p>Alternatively, You can <b>run the app locally</b> (if you have RStudio installed) by using the following command:</p>
     <pre>## Install missing packages
 packagesRequired <- c("shinydashboard", "leaflet", "dplyr",
-                      "reshape2", "scales", "ggplot2",
+                      "tidyverse", "scales", "ggplot2",
                       "data.table", "rgdal", "jsonlite",
                       "shiny")
 packagesToInstall <- packagesRequired[!(packagesRequired %in%
@@ -23,7 +23,8 @@ shiny::runGitHub('asheshwor/np-quake')</pre>
         <li>dplyr</li>
         <li>scales</li>
         <li>ggplot2</li>
-        <li>reshape2</li>
+        <li><s>reshape2</s></li>
+        <li>tidyverse</li>
         <li>data.table</li>
         <li>rgdal</li>
         <li>jsonlite</li>

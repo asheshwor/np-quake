@@ -3,14 +3,16 @@
 #*  2015-05-31, 2015-07-12                                             *
 #*                                                                     *
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-#
+# 2023 update to fix 1) leaflet basemap error;
+#   2) remove reshape2, now depreciated, package
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #*     Load packages
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 library(shinydashboard)
 library(leaflet)
+library(tidyverse)
 library(dplyr)
-require(reshape2)
+# require(reshape2)
 library(scales)
 require(ggplot2)
 library(data.table)
@@ -33,7 +35,7 @@ quake <- quake[(quake$longitude > 80.000 & quake$longitude < 88.183) &
 formatTime <- function(timeString) {
   split1 <- strsplit(paste(timeString), "T")
   split2 <- strsplit(split1[[1]][2], "Z")
-  fin <- paste0(split1[[1]][1], " ",split2[[1]][1])
+  fin <- paste0(split1[[1]][1], " ", split2[[1]][1])
 }
 quake$dateTime <- as.POSIXlt(sapply(quake$time, formatTime)) + 5.75*60*60
 # quake <- quake[with(quake, order(dateTime)), ]
@@ -44,6 +46,8 @@ quake.sub$size <- cut(quake.sub$mag,
 # colour pallet
 pallet <- colorFactor(c("gray32", "dodgerblue4",  "slateblue4", "purple", "firebrick1"),
                    domain = c("3.3 to 3.9", ">3.9 to 4.9", ">4.9 to 5.9", ">5.9 to 6.9", ">6.9 to 7.9"))
+# set map provider tiles
+mapTiles <- "CartoDB.Voyager"
 # shiny session
 function(input, output, session) {
   #filter quake fn
@@ -67,7 +71,7 @@ function(input, output, session) {
                 "<b>Place:</b>", quake.get$place #noticed some pecularities with the place, need to re-check
     )
     #map
-    tempmap <- leaflet(data=quake.get) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
+    tempmap <- leaflet(data=quake.get) %>% addProviderTiles(mapTiles) %>%
       setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
       addCircleMarkers(~longitude, ~latitude,
                        popup = pu,
@@ -133,6 +137,7 @@ function(input, output, session) {
  })
  #function to draw damage graph
  damage <- read.csv("data/damage.csv")
+ # damage <- read.csv("D:/github/np-quake/data/damage.csv")
  damage$DISTRICT <- toupper(damage$DISTRICT)
  drawdamage <- function() {
    damage.sub <- damage[damage$TOTALDEATH > 0,]
@@ -140,7 +145,10 @@ function(input, output, session) {
    damage.sub$DISTRICT <- factor(damage.sub$DISTRICT, damage.sub$DISTRICT, ordered = TRUE)
    damage.sub <- damage.sub[1:12, c(2,5:6)]
    #melt
-   damage.sub <- melt(damage.sub, id.vars = "DISTRICT")
+   # damage.sub <- melt(damage.sub, id.vars = "DISTRICT")
+   #update using pivot.longer
+   damage.sub <- damage.sub %>% 
+     pivot_longer(cols = c(2,3), names_to = "variable",values_to = "value")
    ggplot(damage.sub, aes(x = DISTRICT, y = value, fill=variable)) +
      geom_bar(stat='identity')
    adf <- ggplot(damage.sub,
@@ -181,7 +189,7 @@ function(input, output, session) {
  )
  #damage map
  #read map data
- map <- readOGR("mapdata/nepal-district.geojson", "OGRGeoJSON")
+ map <- readOGR("mapdata/nepal-district.geojson")
  map$rn <- row.names(map)
  tmp.map <- data.table(map@data)
  merged <- merge(tmp.map, damage, by="DISTRICT", all.x=TRUE)
@@ -199,9 +207,9 @@ function(input, output, session) {
  
  ##  Draw map
  pal2 <- colorNumeric(c(NA, "firebrick1", "firebrick4"), c(0, 10, 100, 500, 1000, 3500))
- damagemap <- leaflet(map) %>% addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
+ damagemap <- leaflet(map) %>% addProviderTiles(mapTiles) %>%
    setView((80.000 + 88.183)/2, (25.767 + 30.450)/2,  zoom = 7) %>%
-   addProviderTiles('MapBox.asheshwor.m4g4pnci') %>%
+   addProviderTiles(mapTiles) %>%
    addPolygons(
      fillOpacity = 0.6,
      fillColor = ~pal2(merged$TOTALDEATH),
