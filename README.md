@@ -36,7 +36,7 @@ I am not an earthquake expert. This is not at an attempt to predict aftershock e
 *   dplyr
 *   scales
 *   ggplot2
-*   --reshape2--
+*   ~~reshape2~~
 *   tidyverse
 *   data.table
 *   rgdal
