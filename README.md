@@ -19,10 +19,10 @@ if(length(packagesToInstall)) install.packages(packagesToInstall)
 shiny::runGitHub('asheshwor/np-quake')
 ````
 
-![app screenshot](pictures/1dash.png)
-<small>Screenshot of app's front page</small>
+![app screenshot](pictures/3dash.png)
+<small>Screenshot of app's main page</small>
 
-![app screenshot](pictures/2dash.png)
+![app screenshot](pictures/4dash.png)
 <small>Screenshot of app's fatalities page</small>
 
 ## Disclaimer
