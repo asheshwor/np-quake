@@ -51,4 +51,4 @@ Full source code is available from the following github repo: [https://github.co
 **Earthquake data:** This app uses earthquake data from USGS [http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php](http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php)  
  **Fatalities, injuries and damage data:** Ministry of Home Affairs (MoHA)/National Emergency Operation Center (NEOC) official figures for casualties and damages [5 June update] [MoHA/NEOC official figures Google spreadsheet link](https://docs.google.com/spreadsheets/d/1MCsMtcfN8jwGg4qdzYZCKyxpYp8cdqRSrEpF1WpR6ZE/edit#gid=1367273225)  
  **Nepal districts map geojson file:** Shared under MIT license by Saugat Acharya [https://github.com/mesaugat/geoJSON-Nepal](https://github.com/mesaugat/geoJSON-Nepal)  
- **Map data:** The maps are generated using [leaflet for R](https://rstudio.github.io/leaflet/). Map tiles from [Mapbox](https://www.mapbox.com/). Mapbox uses map data from [Open Street Maps](http://www.openstreetmap.org/).
+ **Map data:** The maps are generated using [leaflet for R](https://rstudio.github.io/leaflet/).
