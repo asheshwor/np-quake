@@ -29,7 +29,8 @@ body <- dashboardBody(
             fluidRow(
               column(width = 12,
                      box(width = NULL, solidHeader = TRUE,
-                         leafletOutput("quakemap", height = 400),
+                         # leafletOutput("quakemap", height = 400),
+                         leafletOutput("quakemap2", height = 400), #NEW MAP
                          htmlOutput("countQuake", inline = FALSE)
                      )
               ),
@@ -89,7 +90,7 @@ body <- dashboardBody(
                              background = "black",
                              width = NULL,
                              collapsible = TRUE,
-                             plotOutput("damagegraph", height=400)
+                             plotOutput("damagegraph2", height=400)
                              # 
                          )
                          # 
