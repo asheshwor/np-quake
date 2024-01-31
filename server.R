@@ -3,6 +3,7 @@
 #*  2015-05-31, 2015-07-12                                             *
 #*                                                                     *
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#* https://github.com/asheshwor/np-quake
 # 2023 Jan update to fix 1) leaflet basemap error;
 #   2) remove reshape2, now depreciated, package
 #   3) remove the use of rgdal package

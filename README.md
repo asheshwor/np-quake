@@ -10,7 +10,7 @@ Alternatively, you can also run the app locally in RStudio by using the followin
 ## Install missing packages
 packagesRequired <- c("shinydashboard", "leaflet", "dplyr",
                       "tidyverse", "scales", "ggplot2",
-                      "data.table", "rgdal", "jsonlite",
+                      "data.table", "sf", "jsonlite",
                       "shiny")
 packagesToInstall <- packagesRequired[!(packagesRequired %in%
                                           installed.packages()[,"Package"])]
@@ -34,12 +34,13 @@ I am not an earthquake expert. This is not at an attempt to predict aftershock e
 *   shinydashboard
 *   leaflet
 *   dplyr
+*   sf
 *   scales
 *   ggplot2
 *   ~~reshape2~~
 *   tidyverse
 *   data.table
-*   rgdal
+*   ~~rgdal~~
 *   jsonlite
 
 ## Source code
