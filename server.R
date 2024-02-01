@@ -22,9 +22,6 @@ library(sf)
 library(scales)
 library(data.table)
 library(jsonlite)
-# SPECIFY SHINY PORT
-options(shiny.host = "0.0.0.0")
-options(shiny.port = 8180)
 
 # SET PARAMETERS
 ## COLOR PALLET
