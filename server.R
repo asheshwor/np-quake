@@ -7,6 +7,9 @@
 # 2023 Jan update to fix 1) leaflet basemap error;
 #   2) remove reshape2, now depreciated, package
 #   3) remove the use of rgdal package
+#   4) reworked leaflet to use leafletProxy
+#   5) removed update graphs button, timeline, frequency etc. are all
+#      interactive now
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #*     Load packages
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
